@@ -1,0 +1,9 @@
+For Single broker
+===================
+both string and customerobj  -->need to start Eurekha,Customer and notification
+
+
+for multiple Broker
+====================
+both string and Orderobj --->need to start Eurekha,Order and notification
+along with Customer and product because order uses Customer and product

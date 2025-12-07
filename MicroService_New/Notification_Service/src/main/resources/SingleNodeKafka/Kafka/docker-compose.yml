@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  kafka-single:
+    image: apache/kafka:4.0.1-rc2
+    container_name: kafka-single
+    hostname: kafka-single
+    environment:
+      # Kafka roles
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_NODE_ID: 10
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 10@kafka-single:19093
+
+      # Listeners
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:19093,PLAINTEXT_HOST://:9098
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-single:9092,PLAINTEXT_HOST://localhost:9098
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+
+      # Topics & replication
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_NUM_PARTITIONS: 3
+
+      # Log directories
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_METADATA_LOG_DIR: /var/lib/kafka/data
+
+    ports:
+      - "9098:9098"   # External client access
+      - "19093:19093" # Controller port
+
+    volumes:
+      - D:\Kafka\single-node-data:/var/lib/kafka/data

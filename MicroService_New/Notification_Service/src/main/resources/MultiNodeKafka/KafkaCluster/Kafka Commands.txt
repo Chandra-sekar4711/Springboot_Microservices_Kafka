@@ -1,0 +1,103 @@
+# ========================
+# KAFKA USEFUL COMMANDS
+# ========================
+
+# 1. TOPIC MANAGEMENT
+# List all topics
+docker exec -it kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
+
+# Describe specific topic
+docker exec -it kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic customer-details
+
+# Describe all topics
+docker exec -it kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe
+
+# Create topic with partitions
+docker exec -it kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic my-topic --partitions 3 --replication-factor 1
+
+# Delete topic
+docker exec -it kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic my-topic
+
+
+# 2. PRODUCER COMMANDS
+# Produce messages to topic
+docker exec -it kafka /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic customer-details
+
+# Produce with key-value
+docker exec -it kafka /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic customer-details --property "parse.key=true" --property "key.separator=:"
+
+
+# 3. CONSUMER COMMANDS
+# Consume from beginning
+docker exec -it kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic customer-details --from-beginning
+
+# Consume with consumer group
+docker exec -it kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic customer-details --group my-group --from-beginning
+
+# Consume from specific partition
+docker exec -it kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic customer-details --partition 0 --from-beginning
+
+# Consume only new messages
+docker exec -it kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic customer-details
+
+# Consume with key-value display
+docker exec -it kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic customer-details --from-beginning --property print.key=true --property print.value=true --property key.separator=": "
+
+#Consume With Partition
+--property print.partition=true
+
+
+# 4. CONSUMER GROUP MANAGEMENT
+# List all consumer groups
+docker exec -it kafka /opt/kafka/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --list
+
+# Describe specific consumer group
+docker exec -it kafka /opt/kafka/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group my-group --describe
+
+# Reset consumer group offsets to beginning
+docker exec -it kafka /opt/kafka/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group my-group --reset-offsets --to-earliest --topic customer-details --execute
+
+# Reset offsets for all topics
+docker exec -it kafka /opt/kafka/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group my-group --reset-offsets --to-earliest --all-topics --execute
+
+# Delete consumer group
+docker exec -it kafka /opt/kafka/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group my-group --delete
+
+
+# 5. MESSAGE OFFSET & MONITORING
+# Get message counts for topic
+docker exec -it kafka /opt/kafka/bin/kafka-get-offsets.sh --bootstrap-server localhost:9092 --topic customer-details
+
+# Alternative offset check
+docker exec -it kafka /opt/kafka/bin/kafka-run-class.sh kafka.tools.GetOffsetShell --bootstrap-server localhost:9092 --topic customer-details --time -1
+
+# Check topic configuration
+docker exec -it kafka /opt/kafka/bin/kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name customer-details --describe
+
+
+# 6. QUICK MONITORING SCRIPT
+# Check everything about a topic
+docker exec -it kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic customer-details
+docker exec -it kafka /opt/kafka/bin/kafka-get-offsets.sh --bootstrap-server localhost:9092 --topic customer-details
+docker exec -it kafka /opt/kafka/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --list
+
+
+============================================================================================================================================
+single Broker Kafka used cmds
+--->----->----->----->----->----->---->
+ 
+view the consumer List
+=======================
+docker exec -it kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
+
+create a consumer group
+=======================
+docker exec -it kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic customer-details --group my-group --property print.partition=true
+
+Describe the group
+=====================
+docker exec -it kafka /opt/kafka/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group my-group --describe
+
+============================================================================================================================================
+MULTI Broker Kafka used cmds
+--->----->----->----->----->----->---->
